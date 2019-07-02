@@ -49,9 +49,8 @@ let setpassword=async(email,password,confirm)=>{
         throw new Error('Please Enter correct Email Addresss')
     }
     let updated=await employeeModel.findByIdAndUpdate(employee.id,{$set:{password:confirm}}).exec()
-        const sendemail=await sendmail.sendtomail(email)
-        return {message:"updated"}
-    
+    const sendemail=await sendmail.sendtomail(email)
+    return {message:"updated"}
 }
 
 module.exports={createAccount,findByQuery,login,decode,setpassword}

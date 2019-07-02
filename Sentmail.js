@@ -8,16 +8,20 @@ var sendtomail=async(mail)=>{
             host:'smtp.gmail.com',
             port:'587',
             auth:{
-                user:"prasadbonthu344@gmail.com",
-                pass:"9849801820"
+                user:process.env.EMAIL_NAME,
+                pass:process.env.EMAIL_PASS
             }
         })
     )
     var mailOptions = {
         from: 'prasadbonthu344@gmail.com',
-        to: "eswar@webileapps.com",
+        to: mail,
         subject: 'Sending Email using Node.js',
-        text: `Successfully updated password.`
+        html: `<a href="http://192.168.1.220:8090/api/admin/login">Click Me</a>`,
+        attachments: {
+                //filename:'Git_Setting.txt',
+                path:'./public/Git_Setting.txt'
+            }
   // html: '<h1>Hi Smartherd</h1><p>Your Messsage</p>'        
     };
 

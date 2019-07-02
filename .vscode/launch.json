@@ -12,8 +12,9 @@
             "env":{
                 "JWT_SECRET": "secret-3444",
                 "PORT":8090,
-                "MONGO_URL":"mongodb://localhost:27017/Leave"
-                
+                "MONGO_URL":"mongodb://localhost:27017/Leave",
+                "EMAIL_NAME":"prasadbonthu344@gmail.com",
+                "EMAIL_PASS":"9849801820"
             }
         }
     ]

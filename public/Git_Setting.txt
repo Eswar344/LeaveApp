@@ -1,0 +1,26 @@
+******* Setting up Git  *********
+
+git --version
+git config --global user.name "Eswar344"
+git config --global user.email "eswarbonthu344@gmail.com"
+git config --list
+
+**** Basic Git Commands ********
+
+git init
+git status
+git add .
+git commit -m "first commit"  
+git log --oneline
+
+******** Online Git Repositories  **********
+
+git remote add origin <repository URL>
+git push -u origin master
+
+
+******** To Your System
+git clone <repository URL>
+
+****** Push the changes  **********
+git push origin master
