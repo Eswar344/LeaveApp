@@ -1,4 +1,6 @@
 var mongoose=require('mongoose')
+var bcrypt=require('bcrypt')
+
 var AddressSchema=mongoose.Schema({
     street:{
         type:String,
@@ -40,7 +42,15 @@ var EmployeeSchema=mongoose.Schema({
         require:true
     }
 })
+EmployeeSchema.pre("save", function (next){
+    var salt = bcrypt.genSaltSync(10);
+    this.password=bcrypt.hashSync(this.password, salt);
+    next()
+})
+EmployeeSchema.methods.ComparePassword = function ComparePassword(password){
+   return bcrypt.compareSync(password,this.password)
 
+};
 
 const employeeSchema=mongoose.model("employees",EmployeeSchema)
 module.exports=employeeSchema

@@ -91,5 +91,4 @@ const deleted=async(count)=>{
     }
 }
 
-
 module.exports={displayLeavesList,checkadmin,decode,findByQuery,deleted,searched_query,AcceptOne,RejectOne,AcceptAll,RejectAll}

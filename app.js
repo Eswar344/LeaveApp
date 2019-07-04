@@ -13,9 +13,9 @@ app.use(morgan('dev'));
 
 app.use('/api',apiRouter)
 
-app.use((error,req,res)=>{
+app.use((error,req,res, next) => {
     if(error){
-        res.send(error)
+        res.status(500).send({message:error.message})
     }
 })
 module.exports=app

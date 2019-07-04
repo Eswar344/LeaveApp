@@ -18,8 +18,6 @@ const createAccount=async(data)=>{
     if (existingUserEmail.length) {
         throw new Error("Email already taken")
     }
-    var salt = bcrypt.genSaltSync(10);
-    password = bcrypt.hashSync(password, salt);
     return await employeeModel.create({name,email,password,address,phone})
 }
 let login = async (email, password) => {
@@ -30,7 +28,7 @@ let login = async (email, password) => {
     if (!employee) {
         throw new Error("Invalid email");
     }
-    if (!(bcrypt.compareSync(password,employee.password))) {
+    if (!(employee.ComparePassword(password))) {
         throw new Error("Invalid password");
     }
     return encode(employee.id, employee.name, employee.email);

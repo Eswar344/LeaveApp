@@ -14,11 +14,11 @@ router.post('/register',async(req,res,next)=>{
     catch(err)
     { next(err)}
 })
-router.get("/login",async(req,res,next)=>{
+router.post("/login",async(req,res,next)=>{
     try {
         const { email, password } = req.body
         const token = await employeeModule.login(email, password);
-        return res.status(200).send({ token });
+        res.status(200).send({ token });
     } catch (error) {
         next(error)
     }
