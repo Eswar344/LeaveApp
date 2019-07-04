@@ -14,10 +14,20 @@ var leaveSchema=mongoose.Schema({
         type:Number,
         required:true
     },
+    Holidays:{
+        type:Number,
+        default:0
+    },
     Reason:{
         type:String,
         required:true
+    },
+    LeaveStatus:{
+        type:String,
+        default: 'NEW',
+        enum: ['NEW', 'ACCEPTED', 'DECLINED']
     }
-},{timestamps:true})
+    
+})
 const LeaveModel=mongoose.model("Leave",leaveSchema)
 module.exports=LeaveModel

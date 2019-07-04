@@ -5,7 +5,7 @@ var bcrypt = require('bcryptjs');
 var jwt=require('jsonwebtoken')
 const salt=10
 
-async function default_setting(){
+async function adminSetUp(){
     const checkExisting_Admin = await adminModel.find({}).exec;
     if (checkExisting_Admin.length==0) {
         adminModel.create({
@@ -14,28 +14,52 @@ async function default_setting(){
         })
     }
 }
-default_setting()
+adminSetUp()
 
-const displayList=async()=>{
-    const list=await leaveModel.find({}).select("Address Indate Outdate Reason").populate("Address","address").exec()
-    .then(docs=>{
-         return {
-         count:docs.length,
-         LeaveStatus: docs.map(ele=>{
-             return {
-                _id:ele._id,
-                Indate:ele.Indate,
-                Outdate:ele.Outdate,
-                Reason:ele.Reason,
-                address:ele.Address.address
-                }
-            })
-         }
-     })
-    return list
+const searched_query=async(search_query)=>{
+    let search={}
+    let {Holidays}=search_query
+    if(Holidays){
+        search['Holidays']=Holidays
+    }
+    return search
 }
+const displayLeavesList=async(search_query)=>{
+    const search=await searched_query(search_query)
+    const list=await leaveModel.find({...search,LeaveStatus:'NEW'}).select("Address Indate Outdate Reason Holidays").populate("Address").exec()
+    return {TotalCount:list.length,
+        LeaveStatus:list.map(ele=>{
+             return {
+                id:ele._id,
+                Indate:new Date(Number(ele.Indate)).toString(),
+                Outdate:new Date(Number(ele.Outdate)).toString(),
+                Reason:ele.Reason,
+                Holidays:ele.Holidays,
+                Address:ele.Address.address
+            }
+        })
+    }
+}
+const AcceptOne=async(id)=>{
+    return await leaveModel.findByIdAndUpdate(id,{$set:{LeaveStatus:'ACCEPTED'}}).exec()
+}
+const RejectOne=async(id)=>{
+    return await leaveModel.findByIdAndUpdate(id,{$set:{LeaveStatus:'DECLINED'}}).exec()
+}
+const AcceptAll=async(IdList)=>{
+    IdList.forEach(async(ele)=> {
+        await leaveModel.findByIdAndUpdate(ele,{$set:{LeaveStatus:'ACCEPTED'}}).exec()
+    });
+    return {message:"AcceptedAll"}
+}
+const RejectAll=async(IdList)=>{
+    IdList.forEach(async(ele)=> {
+        await leaveModel.findByIdAndUpdate(ele,{$set:{LeaveStatus:'DECLINED'}}).exec()
+    });
+    return {message:"RejectedAll"}
+}
+
 const checkadmin=async(email,password)=>{
-   
     let data=await adminModel.find({}).exec()
    let [admin_data] =await adminModel.find({email}).exec()
    if(!admin_data)
@@ -60,5 +84,12 @@ const decode=async(token)=>{
     const payload=jwt.verify(token,process.env.JWT_SECRET)
     return payload
 }
+const deleted=async(count)=>{
+    const del_success= await adminModel.deleteMany({Count:{$gte:count}})
+    if(del_success){
+        return {message:"Successfully deleted"}
+    }
+}
 
-module.exports={displayList,checkadmin,decode,findByQuery}
+
+module.exports={displayLeavesList,checkadmin,decode,findByQuery,deleted,searched_query,AcceptOne,RejectOne,AcceptAll,RejectAll}
